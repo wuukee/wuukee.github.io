@@ -13,8 +13,9 @@ all_categories: [
 ["java", "Java","/posts/java.html"], 
 ["python", "Python","/posts/python.html"], 
 ["linux", "Linux","/posts/linux.html"],
-["mysql", "MySQL","/posts/mysql.html"], 
-["other", "杂记","/posts/other.html"],
+["mysql", "MySQL","/posts/mysql.html"],
+["run", "长跑","/posts/run.html"], 
+["其他", "其他","/posts/other.html"],
 ["about", "关于","/about.html"]
 ]
 
