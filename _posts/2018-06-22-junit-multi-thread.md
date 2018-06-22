@@ -3,6 +3,7 @@ layout: post
 category: "java"
 title:  "基于junit的多线程单元测试"
 tags: [java,多线程,单元测试]
+comments: true
 --- 
  
 **背景**  用Spring的线程池调度器ThreadPoolTaskScheduler进行多线程的调度。  
