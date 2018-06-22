@@ -42,13 +42,13 @@ support.GenericWebApplicationContext: Closing org.springframework.web.context.su
 ```
 总结这两段代码：当aTestRunner调用start方法后不会去等待子线程执行完毕在关闭主线程，而是直接调用TestResult.wasSuccessful()方法，不论返回什么，主线程都会执行相应的System.exit()，这个方法会结束当前正在运行中的java虚拟机，所以使用junit测试多线程方法的结果就不正常了
 
-**解决**  
+*解决*  
 解决这个问题的关键是想办法让主线程暂时不终止：  
-1. 让主线程休眠一段时间，直到子线程能够运行结束。  
+1.让主线程休眠一段时间，直到子线程能够运行结束。  
 ```
 Thread.sleep(60 * 1000);
 ```  
-2. 使用CountDownLatch工具类，让主线程阻塞。
+2.使用CountDownLatch工具类，让主线程阻塞。
 ```
 CountDownLatch countDownLatch = new CountDownLatch(5);
 countDownLatch.await(70, TimeUnit.SECONDS);
