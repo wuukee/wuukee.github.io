@@ -1,14 +1,14 @@
-<div id="disqus_thread"></div>
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
-var disqus_config = function () {
-this.page.url = "{{ page.url | prepend: site.baseurl | prepend: site.url }}";
-this.page.identifier = "{{ page.url }}"; 
-};
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://wuke.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
+var gitment = new Gitment({
+    owner: 'wuukee',
+    repo: 'https://github.com/wuukee/wuukee.github.io',
+    oauth: {
+        client_id: '93f96a914a7d36346e97',
+        client_secret: '8b098211eb387909bd7f9239463c88562c41a1a1',
+    },
+});
+gitment.render('gitmentContainer');
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
