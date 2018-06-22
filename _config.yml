@@ -30,3 +30,5 @@ collections:
 gems:
  - jekyll-paginate
 
+comment:
+  disqus: wuke
