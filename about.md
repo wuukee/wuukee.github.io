@@ -15,6 +15,6 @@ Blog: <https://wuukee.github.io>
 GitHub: <https://github.com/wuukee>   
 
 
-#### 3.Contract
+#### 3.Contact
 Email: 254370923@qq.com  
    
