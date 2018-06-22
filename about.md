@@ -11,8 +11,8 @@ City: Beijing, China
 Career: Software engineer  
 
 #### 2.My Links
-Blog: <http://www.panxw.com>  
-GitHub: <https://wuukee.github.io>   
+Blog: <https://wuukee.github.io>  
+GitHub: <https://github.com/wuukee>   
 
 
 #### 3.Contract
