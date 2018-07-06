@@ -30,3 +30,7 @@ collections:
 gems:
  - jekyll-paginate
 
+leancloud:
+  enable: true
+  app_id: wVw6nXrsJozp7Gm8tTsQ6PDU-gzGzoHsz
+  app_key: E3mBl3AUoLsYGj7QAvRFecmu
