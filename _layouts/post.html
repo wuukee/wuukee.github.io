@@ -6,19 +6,19 @@ layout: default
 <!-- Title -->
 <h2>{{ page.title }}</h2>
 {% if page.tags.size > 0%}<b>标签：</b>{% for tag in page.tags %}{% if tag != "" %}<a href="/tags.html#{{ tag }}"><i>{{ tag }}</i></a>{% if forloop.index != page.tags.size %}, {% endif %}{% endif %}{% endfor %}{% endif %}
+   {% if site.leancloud.enable %}
+       <span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}">
+        <span class="post-meta-divider">|</span>
+        <span class="post-meta-item-text"> 阅读数:  </span>
+        <span class="leancloud-visitors-count"></span>
+       </span>
+   {% endif %}
 <div class="post-date">
 	<span class="glyphicon glyphicon-time"></span>
 	{{ page.date | date:"%Y-%m-%d" }}
 </div>
 <br/>
 
-   {% if site.leancloud.enable %}
-       <span id="{{ page.url }}" class="leancloud_visitors" data-flag-title="{{ page.title }}">
-        <span class="post-meta-divider">|</span>
-        <span class="post-meta-item-text"> Hits:  </span>
-        <span class="leancloud-visitors-count"></span>
-       </span>
-   {% endif %}
 <!-- content -->
 <div style="text-indent:2em;">
 {{ content }}

@@ -13,13 +13,6 @@ title: "爱跑步的程序员"
 	<span class="glyphicon glyphicon-time"></span>
 	{{ post.date | date:"%Y-%m-%d" }}
   </div>
-    {% if site.leancloud.enable %}
-        <span id="{{ post.url }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
-         <span class="post-meta-divider">|</span>
-         <span class="post-meta-item-text"> Hits:  </span>
-         <span class="leancloud-visitors-count"></span>
-        </span>
-    {% endif %}
 </h2>
 <hr>
 {{ post.excerpt | strip_html | strip_newlines | truncate:200}}
