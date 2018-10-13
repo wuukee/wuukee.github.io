@@ -94,9 +94,11 @@ public class PageStaticSqlSource extends PageSqlSource {
 }
 
 ```
-getDefaultBoundSql：获取原始的未经改造的BoundSql。  
-getCountBoundSql：不需要写count查询，插件根据分页查询sql，智能的为你生成的count查询BoundSql。  
-getPageBoundSql：获取分页查询的BoundSql。
+&#8194;getDefaultBoundSql：获取原始的未经改造的BoundSql。   
+
+&#8194;getCountBoundSql：不需要写count查询，插件根据分页查询sql，智能的为你生成的count查询BoundSql。  
+
+&#8194;getPageBoundSql：获取分页查询的BoundSql。
 
 ```
 public class MysqlParser extends AbstractParser {
