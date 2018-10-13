@@ -205,5 +205,4 @@ private Page doProcessPage(Invocation invocation, Page page, Object[] args) thro
 msCountMap.put(ms.getId(), MSUtils.newCountMappedStatement(ms))，创建count查询的MappedStatement对象，并缓存于msCountMap。如果count=true，则执行count查询，结果total值保存于page对象中，继续执行分页查询。执行分页查询，将查询结果保存于page对象中，page是一个ArrayList对象。args[2] = RowBounds.DEFAULT，改变Mybatis原有分页行为；args[1] = parser.setPageParameter(ms, args[1], boundSql, page)，改变原有参数列表（增加分页参数）。
 
 &#8194;总结：PageHelper会使用ThreadLocal获取到同一线程中的变量信息，各个线程之间的Threadlocal不会相互干扰，也就是Thread1中的ThreadLocal1之后获取到Tread1中的变量的信息，不会获取到Thread2中的信息
-所以在多线程环境下，各个Threadlocal之间相互隔离，可以实现，不同thread使用不同的数据源或不同的Thread中执行不同的SQL语句
-所以，PageHelper利用这一点通过拦截器获取到同一线程中的预编译好的SQL语句之后将SQL语句包装成具有分页功能的SQL语句，并将其再次赋值给下一步操作，所以实际执行的SQL语句就是有了分页功能的SQL语句
+所以在多线程环境下，各个Threadlocal之间相互隔离，可以实现，不同thread使用不同的数据源或不同的Thread中执行不同的SQL语句。所以，PageHelper利用这一点通过拦截器获取到同一线程中的预编译好的SQL语句之后将SQL语句包装成具有分页功能的SQL语句，并将其再次赋值给下一步操作，所以实际执行的SQL语句就是有了分页功能的SQL语句。
