@@ -15,7 +15,7 @@ tags: [java,mybatis]
         </dependency>
 
 ```
-&#8194;然后在需要分页的查询前面调用PageHelper的静态方法：
+然后在需要分页的查询前面调用PageHelper的静态方法：
 
 ```
         Page<User> page = PageHelper.startPage(startPage, pageSize);
@@ -23,7 +23,7 @@ tags: [java,mybatis]
 
 ```
 
-&#8194;那么它是怎么帮我实现分页的呢？进入PageHelper源码：
+那么它是怎么帮我实现分页的呢？进入PageHelper源码：
 
 ```
 @Intercepts(@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}))
@@ -96,9 +96,9 @@ public class PageStaticSqlSource extends PageSqlSource {
 
 ```
 
-&#8194;getDefaultBoundSql：获取原始的未经改造的BoundSql。  
-&#8194;getCountBoundSql：不需要写count查询，插件根据分页查询sql，智能的为你生成的count查询BoundSql。  
-&#8194;getPageBoundSql：获取分页查询的BoundSql。
+getDefaultBoundSql：获取原始的未经改造的BoundSql。  
+getCountBoundSql：不需要写count查询，插件根据分页查询sql，智能的为你生成的count查询BoundSql。  
+getPageBoundSql：获取分页查询的BoundSql。
 
 ```
 public class MysqlParser extends AbstractParser {
@@ -120,7 +120,7 @@ public class MysqlParser extends AbstractParser {
 }
 
 ```
-&#8194;这里在查询语句后面拼接limit用于分页。  
+这里在查询语句后面拼接limit用于分页。  
 
 ```
 // PageSqlSource装饰原SqlSource   
@@ -204,10 +204,10 @@ private Page doProcessPage(Invocation invocation, Page page, Object[] args) thro
     }
 
 ```
-&#8194;msCountMap.put(ms.getId(), MSUtils.newCountMappedStatement(ms))，创建count查询的MappedStatement对象，并缓存于msCountMap。  
-&#8194;如果count=true，则执行count查询，结果total值保存于page对象中，继续执行分页查询。  
-&#8194;执行分页查询，将查询结果保存于page对象中，page是一个ArrayList对象。  
-&#8194;args[2] = RowBounds.DEFAULT，改变Mybatis原有分页行为；
+msCountMap.put(ms.getId(), MSUtils.newCountMappedStatement(ms))，创建count查询的MappedStatement对象，并缓存于msCountMap。   
+如果count=true，则执行count查询，结果total值保存于page对象中，继续执行分页查询。  
+执行分页查询，将查询结果保存于page对象中，page是一个ArrayList对象。  
+args[2] = RowBounds.DEFAULT，改变Mybatis原有分页行为；
 args[1] = parser.setPageParameter(ms, args[1], boundSql, page)，改变原有参数列表（增加分页参数）。
 
 &#8194;总结：PageHelper会使用ThreadLocal获取到同一线程中的变量信息，各个线程之间的Threadlocal不会相互干扰，也就是Thread1中的ThreadLocal1之后获取到Tread1中的变量的信息，不会获取到Thread2中的信息
