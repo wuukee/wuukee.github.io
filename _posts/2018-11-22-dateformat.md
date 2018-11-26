@@ -5,10 +5,9 @@ title:  "多线程环境下的SimpleDateFormat"
 tags: [java]
 ---
 
-&#8194;SimpleDateFormat是Java中一个非常常用的类，该类用来对日期字符串进行解析和格式化输出，但如果使用不小心会导致非常微妙和难以调试的问题，因为 DateFormat 和 SimpleDateFormat 类不都是线程安全的，在多线程环境下调用 format() 和 parse() 方法应该使用同步代码来避免问题。下面我们通过一个具体的场景来一步步的深入学习和理解SimpleDateFormat类。
-
+&#8194;SimpleDateFormat是Java中一个非常常用的类，该类用来对日期字符串进行解析和格式化输出，但如果使用不小心会导致非常微妙和难以调试的问题，因为 DateFormat 和 SimpleDateFormat 类不都是线程安全的，在多线程环境下调用 format() 和 parse() 方法应该使用同步代码来避免问题。下面我们通过一个具体的场景来一步步的深入学习和理解SimpleDateFormat类。  
 一.引子  
-&#8194;在程序中我们应当尽量少的创建SimpleDateFormat实例，因为创建这么一个实例需要耗费很大的代价。如果每次处理一个时间信息的时候，就创建一个SimpleDateFormat实例对象，然后再丢弃这个对象，那么这些被创建出来的对象就会占用大量的内存和jvm空间。代码如下：
+在程序中我们应当尽量少的创建SimpleDateFormat实例，因为创建这么一个实例需要耗费很大的代价。如果每次处理一个时间信息的时候，就创建一个SimpleDateFormat实例对象，然后再丢弃这个对象，那么这些被创建出来的对象就会占用大量的内存和jvm空间。代码如下：
 
 ```
 public class DateUtil {
@@ -25,7 +24,7 @@ public class DateUtil {
 }
 
 ```
-那我们相个办法，创建一个静态的SimpleDateFormat实例，然后放到一个DateUtil类中，在需要调用时直接使用这个实例进行操作。改进后的代码如下：
+那我们想个办法，创建一个静态的SimpleDateFormat实例，然后放到一个DateUtil类中，在需要调用时直接使用这个实例进行操作。改进后的代码如下：
 
 ```
 public class DateUtil {
@@ -74,18 +73,17 @@ public class DateUtilTest {
     }
 }
 ```
-在这样的多线程环境下，就可能报出java.lang.NumberFormatException的异常或者输出时间错误的情况。 
- 
+在这样的多线程环境下，就可能报出java.lang.NumberFormatException的异常或者输出时间错误的情况。  
 二.原因  
-&#8194;共享一个变量的开销要比每次创建一个新变量要小很多。上面优化过的静态的SimpleDateFormat版，之所在并发情况下回出现各种灵异错误，是因为SimpleDateFormat和DateFormat类不是线程安全的。我们之所以忽视线程安全的问题，是因为从SimpleDateFormat和DateFormat类提供给我们的接口上来看，实在让人看不出它与线程安全有何相干。只是在JDK文档的最下面有如下说明：  
+共享一个变量的开销要比每次创建一个新变量要小很多。上面优化过的静态的SimpleDateFormat版，之所在并发情况下回出现各种灵异错误，是因为SimpleDateFormat和DateFormat类不是线程安全的。我们之所以忽视线程安全的问题，是因为从SimpleDateFormat和DateFormat类提供给我们的接口上来看，实在让人看不出它与线程安全有何相干。只是在JDK文档的最下面有如下说明：  
 Synchronization：  
 　　Date formats are not synchronized.   
 　　It is recommended to create separate format instances for each thread.   
 　　If multiple threads access a format concurrently, it must be synchronized externally.  
 
-　　下面我们通过看JDK源码来看看为什么SimpleDateFormat和DateFormat类不是线程安全的真正原因： 
-　　SimpleDateFormat继承了DateFormat,在DateFormat中定义了一个protected属性的Calendar类的对象：calendar。只是因为Calendar类的概念复杂，牵扯到时区与本地化等等，Jdk的实现中使用了成员变量来传递参数，这就造成在多线程的时候会出现错误。  
-　　在format方法里，有这样一段代码：
+下面我们通过看JDK源码来看看为什么SimpleDateFormat和DateFormat类不是线程安全的真正原因： 
+SimpleDateFormat继承了DateFormat,在DateFormat中定义了一个protected属性的Calendar类的对象：calendar。只是因为Calendar类的概念复杂，牵扯到时区与本地化等等，Jdk的实现中使用了成员变量来传递参数，这就造成在多线程的时候会出现错误。  
+在format方法里，有这样一段代码：
 
 ```
 private StringBuffer format(Date date, StringBuffer toAppendTo,
@@ -133,8 +131,7 @@ calendar.setTime(date)这条语句改变了calendar，稍后，calendar还会用
 这也同时提醒我们在开发和设计系统的时候注意下一下三点:  
 1.自己写公用类的时候，要对多线程调用情况下的后果在注释里进行明确说明  
 2.对线程环境下，对每一个共享的可变变量都要注意其线程安全性  
-3.我们的类和方法在做设计的时候，要尽量设计成无状态的  
-
+3.我们的类和方法在做设计的时候，要尽量设计成无状态的   
 三.解决办法  
 1.使用同步：同步SimpleDateFormat对象
 
