@@ -75,13 +75,13 @@ public class DateUtilTest {
 ```
 在这样的多线程环境下，就可能报出java.lang.NumberFormatException的异常或者输出时间错误的情况。  
 二.原因  
-&#8194;共享一个变量的开销要比每次创建一个新变量要小很多。上面优化过的静态的SimpleDateFormat版，之所在并发情况下回出现各种灵异错误，是因为SimpleDateFormat和DateFormat类不是线程安全的。我们之所以忽视线程安全的问题，是因为从SimpleDateFormat和DateFormat类提供给我们的接口上来看，实在让人看不出它与线程安全有何相干。只是在JDK文档的最下面有如下说明：  
+共享一个变量的开销要比每次创建一个新变量要小很多。上面优化过的静态的SimpleDateFormat版，之所在并发情况下回出现各种灵异错误，是因为SimpleDateFormat和DateFormat类不是线程安全的。我们之所以忽视线程安全的问题，是因为从SimpleDateFormat和DateFormat类提供给我们的接口上来看，实在让人看不出它与线程安全有何相干。只是在JDK文档的最下面有如下说明：  
 Synchronization：  
-&#8194;Date formats are not synchronized.    
-&#8194;It is recommended to create separate format instances for each thread.   
-&#8194;If multiple threads access a format concurrently, it must be synchronized externally.   
-&#8194;下面我们通过看JDK源码来看看为什么SimpleDateFormat和DateFormat类不是线程安全的真正原因： 
-&#8194;SimpleDateFormat继承了DateFormat,在DateFormat中定义了一个protected属性的Calendar类的对象：calendar。只是因为Calendar类的概念复杂，牵扯到时区与本地化等等，Jdk的实现中使用了成员变量来传递参数，这就造成在多线程的时候会出现错误。  
+    Date formats are not synchronized.    
+    It is recommended to create separate format instances for each thread.   
+    If multiple threads access a format concurrently, it must be synchronized externally.   
+下面我们通过看JDK源码来看看为什么SimpleDateFormat和DateFormat类不是线程安全的真正原因： 
+    SimpleDateFormat继承了DateFormat,在DateFormat中定义了一个protected属性的Calendar类的对象：calendar。只是因为Calendar类的概念复杂，牵扯到时区与本地化等等，Jdk的实现中使用了成员变量来传递参数，这就造成在多线程的时候会出现错误。  
 在format方法里，有这样一段代码：
 
 ```
@@ -119,14 +119,14 @@ private StringBuffer format(Date date, StringBuffer toAppendTo,
     }
 ```
 calendar.setTime(date)这条语句改变了calendar，稍后，calendar还会用到（在subFormat方法里），而这就是引发问题的根源。想象一下，在一个多线程环境下，有两个线程持有了同一个SimpleDateFormat的实例，分别调用format方法：  
-&#8194;线程1调用format方法，改变了calendar这个字段。  
-&#8194;中断来了。  
-&#8194;线程2开始执行，它也改变了calendar。  
-&#8194;又中断了。  
-&#8194;线程1回来了，此时，calendar已然不是它所设的值，而是走上了线程2设计的道路。如果多个线程同时争抢calendar对象，则会出现各种问题，时间不对，线程挂死等等。  
-&#8194;分析一下format的实现，我们不难发现，用到成员变量calendar，唯一的好处，就是在调用subFormat时，少了一个参数，却带来了这许多的问题。其实，只要在这里用一个局部变量，一路传递下去，所有问题都将迎刃而解。  
+    线程1调用format方法，改变了calendar这个字段。  
+    中断来了。  
+    线程2开始执行，它也改变了calendar。  
+    又中断了。  
+    线程1回来了，此时，calendar已然不是它所设的值，而是走上了线程2设计的道路。如果多个线程同时争抢calendar对象，则会出现各种问题，时间不对，线程挂死等等。  
+    分析一下format的实现，我们不难发现，用到成员变量calendar，唯一的好处，就是在调用subFormat时，少了一个参数，却带来了这许多的问题。其实，只要在这里用一个局部变量，一路传递下去，所有问题都将迎刃而解。  
 这个问题背后隐藏着一个更为重要的问题--无状态：无状态方法的好处之一，就是它在各种环境下，都可以安全的调用。衡量一个方法是否是有状态的，就看它是否改动了其它的东西，比如全局变量，比如实例的字段。format方法在运行过程中改动了SimpleDateFormat的calendar字段，所以，它是有状态的。  
-&#8194;这也同时提醒我们在开发和设计系统的时候注意下一下三点:  
+    这也同时提醒我们在开发和设计系统的时候注意下一下三点:  
 1.自己写公用类的时候，要对多线程调用情况下的后果在注释里进行明确说明  
 2.对线程环境下，对每一个共享的可变变量都要注意其线程安全性  
 3.我们的类和方法在做设计的时候，要尽量设计成无状态的   
