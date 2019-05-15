@@ -79,7 +79,7 @@ public class DateUtilTest {
 Synchronization：  
     Date formats are not synchronized.  
     It is recommended to create separate format instances for each thread.
-    If multiple threads access a format concurrently, it must be synchronized externally.
+    If multiple threads access a format concurrently, it must be synchronized externally.   
 下面我们通过看JDK源码来看看为什么SimpleDateFormat和DateFormat类不是线程安全的真正原因： 
     SimpleDateFormat继承了DateFormat,在DateFormat中定义了一个protected属性的Calendar类的对象：calendar。只是因为Calendar类的概念复杂，牵扯到时区与本地化等等，Jdk的实现中使用了成员变量来传递参数，这就造成在多线程的时候会出现错误。  
 在format方法里，有这样一段代码：
@@ -90,7 +90,7 @@ private StringBuffer format(Date date, StringBuffer toAppendTo,
         // Convert input date to time field list
         calendar.setTime(date);
 
-    boolean useDateFormatSymbols = useDateFormatSymbols();
+        boolean useDateFormatSymbols = useDateFormatSymbols();
 
         for (int i = 0; i < compiledPattern.length; ) {
             int tag = compiledPattern[i] >>> 8;
@@ -151,7 +151,7 @@ public class DateSyncUtil {
     } 
 }
 ```
-说明：当线程较多时，当一个线程调用该方法时，其他想要调用此方法的线程就要block，多线程并发量大的时候会对性能有一定的影响。
+说明：当线程较多时，当一个线程调用该方法时，其他想要调用此方法的线程就要block，多线程并发量大的时候会对性能有一定的影响。  
 2.使用ThreadLocal：
 
 ```
