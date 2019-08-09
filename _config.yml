@@ -34,3 +34,12 @@ leancloud:
   enable: true
   app_id: wVw6nXrsJozp7Gm8tTsQ6PDU-gzGzoHsz
   app_key: E3mBl3AUoLsYGj7QAvRFecmu
+  
+comments:
+  gitalk: true
+  gitalk_clientID: '93f96a914a7d36346e97'
+  gitalk_Secret: '9e5bac1b92247f2411fb8e3bf48944d1766a0441'
+  gitalk_repo: 'wuukee.github.io'
+  gitalk_owner: 'wuukee'
+  gitalk_admin: 'wuukee'
+  distractionFreeMode: true 
