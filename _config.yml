@@ -15,7 +15,7 @@ all_categories: [
 ["linux", "Linux","/posts/linux.html"],
 ["mysql", "MySQL","/posts/mysql.html"],
 ["run", "长跑","/posts/run.html"], 
-["其他", "其他","/posts/other.html"],
+["other", "其他","/posts/other.html"],
 ["about", "关于","/about.html"]
 ]
 
